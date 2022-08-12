@@ -3,6 +3,8 @@ package interpreters
 
 import cats.Id
 import cats.syntax.foldable._
+import cats.instances.int._
+import cats.instances.option._
 
 import algebras._
 import model._

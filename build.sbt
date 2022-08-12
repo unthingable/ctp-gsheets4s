@@ -1,16 +1,5 @@
-inThisBuild(List(
-  organization := "com.github.benfradet",
-  homepage := Some(url("https://github.com/BenFradet/gsheets4s")),
-  licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-  developers := List(
-    Developer(
-      "BenFradet",
-      "Ben Fradet",
-      "benjamin.fradet@gmail.com",
-      url("https://benfradet.github.io")
-    )
-  )
-))
+name := "ctp-gsheets4s"
+organization := "com.itv"
 
 lazy val compilerOptions = Seq(
   "-deprecation",
@@ -19,12 +8,9 @@ lazy val compilerOptions = Seq(
   "-language:existentials",
   "-language:higherKinds",
   "-unchecked",
-  "-Yno-adapted-args",
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
-  "-Ywarn-unused-import",
-  "-Xfuture",
-  "-Ypartial-unification"
+  "-Xfuture"
 )
 
 lazy val baseSettings = Seq(
@@ -55,8 +41,9 @@ lazy val gsheets4s = project.in(file("."))
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-core" % catsVersion,
       "org.typelevel" %% "cats-effect" % catsEffectVersion,
+      "com.typesafe.scala-logging" %% "scala-logging"             % "3.9.5",
       "eu.timepit" %% "refined" % refinedVersion,
-      "io.lemonlabs" %% "scala-uri" % scalaUriVersion,
+      "io.lemonlabs" %% "scala-uri" % scalaUriVersion
     ) ++ Seq(
       "io.circe" %% "circe-core",
       "io.circe" %% "circe-generic",
@@ -74,3 +61,13 @@ lazy val gsheets4s = project.in(file("."))
       "eu.timepit" %% "refined-scalacheck" % refinedVersion
     ).map(_ % "test")
   )
+
+gitVersioningSnapshotLowerBound in ThisBuild := "0.4.0"
+
+resolvers += "Artifactory Realm" at "https://itvrepos.jfrog.io/itvrepos/fp-scala-libs/"
+
+credentials += Credentials(Path.userHome / ".ivy2" / "fp-scala-libs.credentials")
+
+publishArtifact := true
+publishArtifact in Test := false
+publishTo := Some("Artifactory Realm" at "https://itvrepos.jfrog.io/itvrepos/fp-scala-libs/")
