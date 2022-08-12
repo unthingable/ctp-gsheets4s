@@ -7,11 +7,12 @@ import eu.timepit.refined.auto._
 import org.scalatest._
 
 import model._
+import org.scalatest.flatspec.AnyFlatSpec
 
 object Integration extends Tag(
   if (sys.env.get("GSHEETS4S_ACCESS_TOKEN").isDefined) "" else classOf[Ignore].getName)
 
-class SpreadsheetsValuesSpec extends FlatSpec {
+class SpreadsheetsValuesSpec extends AnyFlatSpec {
 
   val creds = for {
     accessToken <- sys.env.get("GSHEETS4S_ACCESS_TOKEN")
@@ -41,7 +42,7 @@ class SpreadsheetsValuesSpec extends FlatSpec {
     assert(vr.values == vr2.values)
   }
 
-  it should "report an error if the spreadsheet it doesn't exist" taggedAs Integration  in {
+  it should "report an error if the spreadsheet it doesn't exist" taggedAs Integration in {
     val res = (for {
       credsRef <- Ref.of[IO, Credentials](creds.get)
       spreadsheetsValues = GSheets4s(credsRef).spreadsheetsValues
@@ -55,7 +56,7 @@ class SpreadsheetsValuesSpec extends FlatSpec {
     assert(err.status == "NOT_FOUND")
   }
 
-  it should "work with a faulty access token" taggedAs Integration  in {
+  it should "work with a faulty access token" taggedAs Integration in {
     val res = (for {
       credsRef <- Ref.of[IO, Credentials](creds.get.copy(accessToken = "faulty"))
       spreadsheetsValues = GSheets4s(credsRef).spreadsheetsValues
