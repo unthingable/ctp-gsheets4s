@@ -28,9 +28,9 @@ lazy val baseSettings = Seq(
 )
 
 lazy val catsVersion = "1.6.1"
-lazy val catsEffectVersion = "1.0.0"
+lazy val catsEffectVersion = "1.4.0"
 lazy val circeVersion = "0.10.0"
-lazy val refinedVersion = "0.9.2"
+lazy val refinedVersion = "0.9.29"
 lazy val attoVersion = "0.6.3"
 lazy val hammockVersion = "0.8.7"
 lazy val scalacheckVersion = "1.14.0"
@@ -43,7 +43,7 @@ lazy val gsheets4s = project.in(file("."))
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-core" % catsVersion,
       "org.typelevel" %% "cats-effect" % catsEffectVersion,
-      "com.typesafe.scala-logging" %% "scala-logging"             % "3.9.2",
+      "com.typesafe.scala-logging" %% "scala-logging"             % "3.9.5",
       "eu.timepit" %% "refined" % refinedVersion
     ) ++ Seq(
       "io.circe" %% "circe-core",
