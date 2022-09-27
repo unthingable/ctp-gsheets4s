@@ -10,7 +10,6 @@ lazy val compilerOptions = Seq(
   "-unchecked",
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
-  "-Xfuture"
 )
 
 lazy val baseSettings = Seq(
@@ -21,18 +20,18 @@ lazy val baseSettings = Seq(
   scalacOptions in (Test, console) ~= {
     _.filterNot(Set("-Ywarn-unused-import"))
   },
-  scalaVersion := "2.13.6",
+  scalaVersion := "2.13.8",
 )
 
-lazy val catsVersion = "2.6.1"
-lazy val catsEffectVersion = "2.5.4"
+lazy val catsVersion = "2.7.0"
+lazy val catsEffectVersion = "3.3.10"
 lazy val circeVersion = "0.14.1"
-lazy val refinedVersion = "0.9.27"
+lazy val refinedVersion = "0.9.28"
 lazy val attoVersion = "0.9.5"
 lazy val hammockVersion = "0.11.3"
 lazy val scalacheckVersion = "1.15.4"
-lazy val scalatestVersion = "3.2.10"
-lazy val scalaUriVersion = "3.5.0"
+lazy val scalatestVersion = "3.2.11"
+lazy val scalaUriVersion = "4.0.1"
 
 lazy val gsheets4s = project.in(file("."))
   .settings(name := "gsheets4s")

@@ -2,14 +2,14 @@ package gsheets4s
 package integration
 
 import cats.effect.IO
-import cats.effect.concurrent.Ref
 import eu.timepit.refined.auto._
 import org.scalatest._
-
 import model._
 import org.scalatest.flatspec.AnyFlatSpec
+import cats.effect.Ref
+import cats.effect.unsafe.implicits.global
 
-object Integration extends Tag(
+object Integration extends Tag (
   if (sys.env.get("GSHEETS4S_ACCESS_TOKEN").isDefined) "" else classOf[Ignore].getName)
 
 class SpreadsheetsValuesSpec extends AnyFlatSpec {
