@@ -1,7 +1,7 @@
 package gsheets4s.http
 
-import cats.syntax.option._
-import hammock.Uri
+import org.http4s.Uri
+import org.http4s.implicits._
 
 case class GSheets4sDefaultUrls(
   baseUrl: Uri,
@@ -10,7 +10,7 @@ case class GSheets4sDefaultUrls(
 
 object GSheets4sDefaultUrls {
   implicit val defaultUrls: GSheets4sDefaultUrls = GSheets4sDefaultUrls(
-    Uri("https".some, none, "sheets.googleapis.com/v4/spreadsheets"),
-    Uri("https".some, none, "www.googleapis.com/oauth2/v4/token")
+    uri"https://sheets.googleapis.com/v4/spreadsheets",
+    uri"https://www.googleapis.com/oauth2/v4/token"
   )
 }

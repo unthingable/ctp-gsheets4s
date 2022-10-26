@@ -2,15 +2,15 @@ package gsheets4s
 package interpreters
 
 import cats.syntax.show._
+import gsheets4s.algebras.SpreadsheetsValues
+import gsheets4s.http._
+import gsheets4s.model._
 import io.circe.generic.auto._
-
-import algebras.SpreadsheetsValues
-import http._
-import model._
+import org.http4s.Uri
 
 class RestSpreadsheetsValues[F[_]](client: HttpClient[F]) extends SpreadsheetsValues[F] {
   def get(spreadsheetID: String, range: A1Notation): F[Either[GsheetsError, ValueRange]] =
-    client.get(io.lemonlabs.uri.Url.parse(s"$spreadsheetID/values/${range.show}"))
+    client.get(Uri.unsafeFromString(s"$spreadsheetID/values/${range.show}"))
 
   def update(
     spreadsheetID: String,
@@ -18,6 +18,6 @@ class RestSpreadsheetsValues[F[_]](client: HttpClient[F]) extends SpreadsheetsVa
     updates: ValueRange,
     valueInputOption: ValueInputOption
   ): F[Either[GsheetsError, UpdateValuesResponse]] =
-    client.put(io.lemonlabs.uri.Url.parse(s"$spreadsheetID/values/${range.show}"), updates,
+    client.put(Uri.unsafeFromString(s"$spreadsheetID/values/${range.show}"), updates,
       List(("valueInputOption", valueInputOption.value)))
 }

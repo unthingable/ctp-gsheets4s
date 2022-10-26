@@ -28,7 +28,7 @@ lazy val catsEffectVersion = "3.3.10"
 lazy val circeVersion = "0.14.1"
 lazy val refinedVersion = "0.9.28"
 lazy val attoVersion = "0.9.5"
-lazy val hammockVersion = "0.11.3"
+lazy val http4sVersion = "0.23.16"
 lazy val scalacheckVersion = "1.15.4"
 lazy val scalatestVersion = "3.2.11"
 lazy val scalaUriVersion = "4.0.1"
@@ -51,10 +51,10 @@ lazy val gsheets4s = project.in(file("."))
       "org.tpolecat" %% "atto-core",
       "org.tpolecat" %% "atto-refined"
     ).map(_ % attoVersion) ++ Seq(
-      "com.pepegar" %% "hammock-core",
-      "com.pepegar" %% "hammock-apache-http",
-      "com.pepegar" %% "hammock-circe"
-    ).map(_ % hammockVersion) ++ Seq(
+      "org.http4s" %% "http4s-dsl",
+      "org.http4s" %% "http4s-circe",
+      "org.http4s" %% "http4s-client"
+    ).map(_ % http4sVersion) ++ Seq(
       "org.scalatest" %% "scalatest" % scalatestVersion,
       "org.scalacheck" %% "scalacheck" % scalacheckVersion,
       "eu.timepit" %% "refined-scalacheck" % refinedVersion

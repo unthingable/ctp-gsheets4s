@@ -8,11 +8,14 @@ import model._
 import org.scalatest.flatspec.AnyFlatSpec
 import cats.effect.Ref
 import cats.effect.unsafe.implicits.global
+import org.http4s.client.JavaNetClientBuilder
 
 object Integration extends Tag (
   if (sys.env.get("GSHEETS4S_ACCESS_TOKEN").isDefined) "" else classOf[Ignore].getName)
 
 class SpreadsheetsValuesSpec extends AnyFlatSpec {
+
+  val client = JavaNetClientBuilder[IO].create
 
   val creds = for {
     accessToken <- sys.env.get("GSHEETS4S_ACCESS_TOKEN")
@@ -30,7 +33,7 @@ class SpreadsheetsValuesSpec extends AnyFlatSpec {
   "RestSpreadsheetsValues" should "update and get values" taggedAs Integration in {
     val res = (for {
       credsRef <- Ref.of[IO, Credentials](creds.get)
-      spreadsheetsValues = GSheets4s(credsRef).spreadsheetsValues
+      spreadsheetsValues = GSheets4s(credsRef, client).spreadsheetsValues
       prog <- new TestPrograms(spreadsheetsValues)
         .updateAndGet(spreadsheetID, vr, vio)
     } yield prog).unsafeRunSync()
@@ -45,7 +48,7 @@ class SpreadsheetsValuesSpec extends AnyFlatSpec {
   it should "report an error if the spreadsheet it doesn't exist" taggedAs Integration in {
     val res = (for {
       credsRef <- Ref.of[IO, Credentials](creds.get)
-      spreadsheetsValues = GSheets4s(credsRef).spreadsheetsValues
+      spreadsheetsValues = GSheets4s(credsRef, client).spreadsheetsValues
       prog <- new TestPrograms(spreadsheetsValues)
         .updateAndGet("not-existing-spreadsheetid", vr, vio)
     } yield prog).unsafeRunSync()
@@ -59,7 +62,7 @@ class SpreadsheetsValuesSpec extends AnyFlatSpec {
   it should "work with a faulty access token" taggedAs Integration in {
     val res = (for {
       credsRef <- Ref.of[IO, Credentials](creds.get.copy(accessToken = "faulty"))
-      spreadsheetsValues = GSheets4s(credsRef).spreadsheetsValues
+      spreadsheetsValues = GSheets4s(credsRef, client).spreadsheetsValues
       prog <- new TestPrograms(spreadsheetsValues)
         .updateAndGet(spreadsheetID, vr, vio)
     } yield prog).unsafeRunSync()
