@@ -83,8 +83,7 @@ class HttpClient[F[_]: Monad](creds: Ref[F, Credentials], requester: HttpRequest
     accessToken: String,
     path: Uri,
     params: List[(String, String)]): Uri =
-      urls.baseUrl
-        .resolve(path)
+    (urls.baseUrl / path.toString())
         .withQueryParam("access_token", accessToken)
         .withQueryParams(params.toMap)
 }
