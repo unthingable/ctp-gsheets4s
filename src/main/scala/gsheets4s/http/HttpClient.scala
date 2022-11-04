@@ -9,6 +9,7 @@ import gsheets4s.model.{Credentials, GsheetsError}
 import io.circe.{Decoder, Encoder}
 import org.http4s.circe.CirceEntityCodec._
 import org.http4s.client.Client
+import org.http4s.dsl.io._
 import org.http4s.{Method, Request, Uri}
 
 trait HttpRequester[F[_]] {
@@ -20,12 +21,12 @@ trait HttpRequester[F[_]] {
 class Http4sRequester[F[_]: Concurrent](client: Client[F]) extends HttpRequester[F] {
 
   def request[O](uri: Uri, method: Method)(implicit d: Decoder[O]): F[O] = {
-    client.expect[O](Request[F](method, uri))
+    client.run(Request[F](method, uri)).use(_.as[O])
   }
 
   def requestWithBody[I, O](
     uri: Uri, body: I, method: Method)(implicit e: Encoder[I], d: Decoder[O]): F[O] = {
-      client.expect[O](Request[F](method, uri).withEntity(body))
+      client.run(Request[F](method, uri).withEntity(body)).use(_.as[O])
     }
 }
 
