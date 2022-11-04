@@ -9,7 +9,6 @@ import gsheets4s.model.{Credentials, GsheetsError}
 import io.circe.{Decoder, Encoder}
 import org.http4s.circe.CirceEntityCodec._
 import org.http4s.client.Client
-import org.http4s.dsl.io._
 import org.http4s.{Method, Request, Uri}
 
 trait HttpRequester[F[_]] {
@@ -33,14 +32,14 @@ class Http4sRequester[F[_]: Concurrent](client: Client[F]) extends HttpRequester
 class HttpClient[F[_]: Monad](creds: Ref[F, Credentials], requester: HttpRequester[F])(
     implicit urls: GSheets4sDefaultUrls) {
   def get[O](
-    path: Uri,
+    path: String,
     params: List[(String, String)] = List.empty)(
     implicit d: Decoder[O]): F[Either[GsheetsError, O]] =
       req(token => requester
         .request[Either[GsheetsError, O]](urlBuilder(token, path, params), Method.GET))
 
   def put[I, O](
-    path: Uri,
+    path: String,
     body: I,
     params: List[(String, String)] = List.empty)(
     implicit e: Encoder[I], d: Decoder[O]): F[Either[GsheetsError, O]] =
@@ -48,7 +47,7 @@ class HttpClient[F[_]: Monad](creds: Ref[F, Credentials], requester: HttpRequest
         urlBuilder(token, path, params), body, Method.PUT))
 
   def post[I, O](
-    path: Uri,
+    path: String,
     body: I,
     params: List[(String, String)] = List.empty)(
     implicit e: Encoder[I], d: Decoder[O]): F[Either[GsheetsError, O]] =
@@ -82,9 +81,10 @@ class HttpClient[F[_]: Monad](creds: Ref[F, Credentials], requester: HttpRequest
 
   private def urlBuilder(
     accessToken: String,
-    path: Uri,
+    path: String,
     params: List[(String, String)]): Uri =
-    (urls.baseUrl / path.toString())
-        .withQueryParam("access_token", accessToken)
-        .withQueryParams(params.toMap)
+    urls.baseUrl
+      .addPath(path)
+      .withQueryParam("access_token", accessToken)
+      .withQueryParams(params.toMap)
 }
